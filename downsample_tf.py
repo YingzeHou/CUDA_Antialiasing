@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw
 import tensorflow as tf
 import numpy as np
+from datetime import datetime
 
 
 # Create circle
@@ -16,6 +17,9 @@ img.save('out/hollow_black_circle.png')
 
 # TensorFlow resizing
 img_tensor = tf.convert_to_tensor(np.array(img))
+start = datetime.now()
 resized_tensorflow = tf.image.resize(img_tensor, (16, 16), antialias=True)
+end = datetime.now()
 resized_tensorflow = Image.fromarray(resized_tensorflow.numpy().astype(np.uint8))
 resized_tensorflow.save('out/blurred_tf.png')
+print("Elapsed", (end - start).total_seconds(), "s")
