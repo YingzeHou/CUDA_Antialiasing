@@ -1,6 +1,8 @@
 #include <cuda.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
+#include <time.h>
+#include <iostream>
 
 __global__ void resizeKernel(unsigned char* input, unsigned char* output, int inputWidth, int inputHeight, int outputWidth, int outputHeight, bool antialiasing) {
     int outX = blockIdx.x * blockDim.x + threadIdx.x;
@@ -75,9 +77,13 @@ void resizeImg(unsigned char* d_img, int imgWidth, int imgHeight, int downsample
                       (newHeight + downBlockSize.y - 1) / downBlockSize.y);
 
     // Downsample the image
+    clock_t start = clock();
     resizeKernel<<<downGridSize, downBlockSize>>>(d_img, d_img_downsampled, imgWidth, imgHeight, newWidth, newHeight, true);
     // resizeImg(d_img, d_img_downsampled, imgWidth, imgHeight, downsampleFactor, true);
     cudaDeviceSynchronize();
+    clock_t end = clock();
+    double total_t = (double)(end - start) / CLOCKS_PER_SEC;
+    std::cout << "Resize time: " << total_t << std::endl;
 
     // Allocate memory for the upsampled image
     unsigned char* d_img_upsampled;

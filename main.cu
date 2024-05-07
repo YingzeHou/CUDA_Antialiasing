@@ -72,7 +72,7 @@ int main(int argc, char** argv) {
     cudaMemcpy(h_img, d_img, imgSize, cudaMemcpyDeviceToHost);
 
     // Define the downsample factor and calculate the new dimensions
-    const int downsampleFactor = 16; // Replace with the desired factor
+    const int downsampleFactor = 64; // Replace with the desired factor
     resizeImg(d_img, imgWidth, imgHeight, downsampleFactor);
 
     // Free the memory
